@@ -166,7 +166,7 @@ export function QweenGame() {
                   onClick={() => handleCellClick(r, c)}
                   className={`
                     aspect-square flex items-center justify-center text-xl sm:text-2xl font-bold
-                    transition-colors duration-150 relative bg-hub-card
+                    transition-colors duration-150 relative
                     ${regionClass}
                     ${borderTop} ${borderLeft}
                     ${!isQueen && !isBlocked ? 'hover:brightness-95 dark:hover:brightness-110' : ''}

@@ -144,14 +144,14 @@ export function isPatchesSolved(placedPatches, size) {
 
 export function getPatchColor(index) {
   const colors = [
-    'bg-[#f0abfc] border-[#d946ef] text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]', // Fuchsia
-    'bg-[#93c5fd] border-[#3b82f6] text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]', // Blue
-    'bg-[#86efac] border-[#22c55e] text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]', // Green
-    'bg-[#fde047] border-[#eab308] text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]', // Yellow
-    'bg-[#fdba74] border-[#f97316] text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]', // Orange
-    'bg-[#fda4af] border-[#f43f5e] text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]', // Rose
-    'bg-[#c4b5fd] border-[#8b5cf6] text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]', // Violet
-    'bg-[#67e8f9] border-[#06b6d4] text-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]', // Cyan
+    'bg-fuchsia-300 border-fuchsia-500 text-white',
+    'bg-blue-300 border-blue-500 text-white',
+    'bg-green-300 border-green-500 text-white',
+    'bg-yellow-300 border-yellow-500 text-white',
+    'bg-orange-300 border-orange-500 text-white',
+    'bg-rose-300 border-rose-500 text-white',
+    'bg-violet-300 border-violet-500 text-white',
+    'bg-cyan-300 border-cyan-500 text-white',
   ]
   return colors[index % colors.length]
 }

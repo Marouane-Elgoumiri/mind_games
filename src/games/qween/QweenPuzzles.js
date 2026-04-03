@@ -119,15 +119,15 @@ export function isQweenSolved(queens, size, conflicts) {
 
 export function getRegionColor(index) {
   const colors = [
-    'bg-[#f87171] dark:bg-[#991b1b]', // Red
-    'bg-[#fb923c] dark:bg-[#9a3412]', // Orange
-    'bg-[#fbbf24] dark:bg-[#92400e]', // Yellow
-    'bg-[#4ade80] dark:bg-[#166534]', // Green
-    'bg-[#22d3ee] dark:bg-[#155e75]', // Cyan
-    'bg-[#818cf8] dark:bg-[#3730a3]', // Indigo
-    'bg-[#c084fc] dark:bg-[#6b21a8]', // Purple
-    'bg-[#f472b6] dark:bg-[#9d174d]', // Pink
-    'bg-[#94a3b8] dark:bg-[#334155]', // Slate
+    'bg-red-400 dark:bg-red-900',
+    'bg-orange-400 dark:bg-orange-900',
+    'bg-yellow-400 dark:bg-yellow-900',
+    'bg-green-400 dark:bg-green-900',
+    'bg-cyan-400 dark:bg-cyan-900',
+    'bg-indigo-400 dark:bg-indigo-900',
+    'bg-purple-400 dark:bg-purple-900',
+    'bg-pink-400 dark:bg-pink-900',
+    'bg-slate-400 dark:bg-slate-900',
   ]
   return colors[index % colors.length]
 }
