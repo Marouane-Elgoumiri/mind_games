@@ -1,10 +1,14 @@
 # 🧠 Mind Games
 
+<div align="center">    
+
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Lucide Icons](https://img.shields.io/badge/Lucide_Icons-FF4B4B?style=for-the-badge&logo=lucide&logoColor=white)](https://lucide.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+
+</div>
 
 A collection of minimalist, high-fidelity logic puzzles built for the modern web. Inspired by the logic games found on LinkedIn and classic puzzle suites, **Mind Games** focuses on smooth interactions, crisp visuals, and brain-teasing challenges.
 
