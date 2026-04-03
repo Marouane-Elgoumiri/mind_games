@@ -1,27 +1,65 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useGame } from '../../context/GameContext'
 import { Header } from '../../components/Header'
 import { Timer } from '../../components/common/Timer'
 import { Toast } from '../../components/common/Toast'
-import { RulesDialog } from '../../components/common/Dialog'
+import { RulesDialog, WinDialog } from '../../components/common/Dialog'
 import { getQweenPuzzle, getQweenPuzzleCount, getConflictingQueens, isQweenSolved } from './QweenPuzzles'
 import { HelpCircle, RefreshCw, ChevronLeft, ChevronRight, Crown, X } from 'lucide-react'
 
 export function QweenGame() {
-  const { recordWin } = useGame()
+  const { recordWin, setStars } = useGame()
   const [puzzleIndex, setPuzzleIndex] = useState(0)
   const puzzle = getQweenPuzzle(puzzleIndex)
   const { size, regions, regionColors } = puzzle
 
   const [board, setBoard] = useState(() => Array(size).fill(null).map(() => Array(size).fill(0)))
-  const [queens, setQueens] = useState([])
   const [isComplete, setIsComplete] = useState(false)
+  const [showWinDialog, setShowWinDialog] = useState(false)
+  const [stars, setStarsCount] = useState(0)
   const [showRules, setShowRules] = useState(false)
   const [toast, setToast] = useState(null)
   const [elapsedTime, setElapsedTime] = useState(0)
   const [timerRunning, setTimerRunning] = useState(true)
 
-  const conflicts = useMemo(() => getConflictingQueens(queens, regions, size), [queens, regions, size])
+  // Derive queens from board
+  const queens = useMemo(() => {
+    const list = []
+    board.forEach((row, r) => {
+      row.forEach((cell, c) => {
+        if (cell === 2) list.push([r, c])
+      })
+    })
+    return list
+  }, [board])
+
+  // Reset board when puzzle changes
+  useEffect(() => {
+    setBoard(Array(size).fill(null).map(() => Array(size).fill(0)))
+    setIsComplete(false)
+    setShowWinDialog(false)
+    setStarsCount(0)
+    setElapsedTime(0)
+    setTimerRunning(true)
+    setToast(null)
+  }, [puzzleIndex, size])
+
+  const conflicts = useMemo(() => getConflictingQueens(queens, regions), [queens, regions])
+
+  // Check for win condition
+  useEffect(() => {
+    if (!isComplete && isQweenSolved(queens, size, conflicts)) {
+      setIsComplete(true)
+      setTimerRunning(false)
+      recordWin('qween', elapsedTime, puzzle.id)
+      
+      const starRating = elapsedTime < 120 ? 3 : elapsedTime < 240 ? 2 : 1
+      setStars('qween', puzzle.id, starRating)
+      setStarsCount(starRating)
+      setShowWinDialog(true)
+      setToast({ message: '🎉 Congratulations! Puzzle solved!', type: 'success' })
+    }
+  }, [queens, size, conflicts, isComplete, elapsedTime, recordWin, setStars, puzzle.id])
 
   const handleCellClick = useCallback((row, col) => {
     if (isComplete) return
@@ -38,32 +76,15 @@ export function QweenGame() {
         next[row][col] = 0
       }
 
-      const newQueens = []
-      for (let r = 0; r < size; r++) {
-        for (let c = 0; c < size; c++) {
-          if (next[r][c] === 2) newQueens.push([r, c])
-        }
-      }
-
-      setQueens(newQueens)
-
-      const newConflicts = getConflictingQueens(newQueens, regions)
-
-      if (isQweenSolved(newQueens, size, newConflicts)) {
-        setIsComplete(true)
-        setTimerRunning(false)
-        recordWin('qween', elapsedTime, puzzle.id)
-        setToast({ message: '🎉 Congratulations! Puzzle solved!', type: 'success' })
-      }
-
       return next
     })
-  }, [isComplete, size, regions, elapsedTime, recordWin, puzzle.id])
+  }, [isComplete])
 
   const handleReset = () => {
     setBoard(Array(size).fill(null).map(() => Array(size).fill(0)))
-    setQueens([])
     setIsComplete(false)
+    setShowWinDialog(false)
+    setStarsCount(0)
     setElapsedTime(0)
     setTimerRunning(true)
     setToast(null)
@@ -172,6 +193,15 @@ export function QweenGame() {
           Queens placed: {queens.length} / {size}
         </div>
       </main>
+
+      <WinDialog 
+        open={showWinDialog}
+        onOpenChange={setShowWinDialog}
+        stars={stars}
+        time={elapsedTime}
+        onNext={handleNextPuzzle}
+        gameTitle="Qween"
+      />
 
       <RulesDialog
         open={showRules}

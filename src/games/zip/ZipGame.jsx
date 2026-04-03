@@ -5,6 +5,7 @@ import { Timer } from '../../components/common/Timer'
 import { Toast } from '../../components/common/Toast'
 import { getZipPuzzle, getZipPuzzleCount, isZipSolved, validateZipPath } from './ZipPuzzles'
 import { RefreshCw, ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from 'lucide-react'
+import { WinDialog } from '../../components/common/Dialog'
 
 function ZipHowToPlay() {
   const [isOpen, setIsOpen] = useState(false)
@@ -50,7 +51,7 @@ function ZipHowToPlay() {
 }
 
 export function ZipGame() {
-  const { recordWin } = useGame()
+  const { recordWin, setStars } = useGame()
   const [puzzleIndex, setPuzzleIndex] = useState(0)
   const puzzle = getZipPuzzle(puzzleIndex)
   const { size, numbers } = puzzle
@@ -59,6 +60,8 @@ export function ZipGame() {
   const [currentPointer, setCurrentPointer] = useState(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [isComplete, setIsComplete] = useState(false)
+  const [showWinDialog, setShowWinDialog] = useState(false)
+  const [stars, setStarsCount] = useState(0)
   const [toast, setToast] = useState(null)
   const [elapsedTime, setElapsedTime] = useState(0)
   const [timerRunning, setTimerRunning] = useState(true)
@@ -70,9 +73,14 @@ export function ZipGame() {
       setIsComplete(true)
       setTimerRunning(false)
       recordWin('zip', elapsedTime, puzzle.id)
+      
+      const starRating = elapsedTime < 60 ? 3 : elapsedTime < 120 ? 2 : 1
+      setStars('zip', puzzle.id, starRating)
+      setStarsCount(starRating)
+      setShowWinDialog(true)
       setToast({ message: '🎉 Path complete! Puzzle solved!', type: 'success' })
     }
-  }, [path, numbers, size, isComplete, elapsedTime, recordWin, puzzle.id])
+  }, [path, numbers, size, isComplete, elapsedTime, recordWin, setStars, puzzle.id])
 
   const getCellFromEvent = useCallback((e) => {
     if (!boardRef.current) return null
@@ -196,6 +204,8 @@ export function ZipGame() {
     setElapsedTime(0)
     setTimerRunning(true)
     setToast(null)
+    setShowWinDialog(false)
+    setStarsCount(0)
   }
 
   const handleUndo = () => {
@@ -416,6 +426,15 @@ export function ZipGame() {
 
         <ZipHowToPlay />
       </main>
+
+      <WinDialog 
+        open={showWinDialog}
+        onOpenChange={setShowWinDialog}
+        stars={stars}
+        time={elapsedTime}
+        onNext={handleNextPuzzle}
+        gameTitle="Zip"
+      />
 
       {toast && (
         <Toast

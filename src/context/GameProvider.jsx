@@ -8,8 +8,8 @@ const initialState = {
   theme: 'dark',
   currentGame: null,
   scores: {
-    qween: { wins: 0, streak: 0, bestTime: null, puzzlesSolved: [], lastPlayed: null },
-    zip: { wins: 0, streak: 0, bestTime: null, puzzlesSolved: [], lastPlayed: null },
+    qween: { wins: 0, streak: 0, bestTime: null, puzzlesSolved: [], lastPlayed: null, stars: {} },
+    zip: { wins: 0, streak: 0, bestTime: null, puzzlesSolved: [], lastPlayed: null, stars: {} },
     patches: { wins: 0, streak: 0, bestTime: null, puzzlesSolved: [], lastPlayed: null, stars: {} },
   },
   dailyStreak: 0,
@@ -75,16 +75,16 @@ function gameReducer(state, action) {
       }
     }
 
-    case 'SET_PATCHES_STARS': {
-      const { puzzleId, stars } = action.payload
+    case 'SET_STARS': {
+      const { game, puzzleId, stars } = action.payload
       return {
         ...state,
         scores: {
           ...state.scores,
-          patches: {
-            ...state.scores.patches,
+          [game]: {
+            ...state.scores[game],
             stars: {
-              ...(state.scores.patches?.stars || {}),
+              ...(state.scores[game]?.stars || {}),
               [puzzleId]: stars,
             },
           },
@@ -135,12 +135,12 @@ export function GameProvider({ children }) {
     dispatch({ type: 'RECORD_WIN', payload: { game, time, puzzleId } })
   }
 
-  const setPatchesStars = (puzzleId, stars) => {
-    dispatch({ type: 'SET_PATCHES_STARS', payload: { puzzleId, stars } })
+  const setStars = (game, puzzleId, stars) => {
+    dispatch({ type: 'SET_STARS', payload: { game, puzzleId, stars } })
   }
 
   return (
-    <GameContext.Provider value={{ state, toggleTheme, setCurrentGame, recordWin, setPatchesStars }}>
+    <GameContext.Provider value={{ state, toggleTheme, setCurrentGame, recordWin, setStars }}>
       {children}
     </GameContext.Provider>
   )

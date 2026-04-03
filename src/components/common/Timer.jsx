@@ -7,14 +7,14 @@ export function Timer({ isRunning, onTimeUpdate }) {
   useEffect(() => {
     if (!isRunning) return
     const interval = setInterval(() => {
-      setSeconds((s) => {
-        const next = s + 1
-        onTimeUpdate?.(next)
-        return next
-      })
+      setSeconds((s) => s + 1)
     }, 1000)
     return () => clearInterval(interval)
-  }, [isRunning, onTimeUpdate])
+  }, [isRunning])
+
+  useEffect(() => {
+    onTimeUpdate?.(seconds)
+  }, [seconds, onTimeUpdate])
 
   const formatTime = (totalSeconds) => {
     const mins = Math.floor(totalSeconds / 60)
